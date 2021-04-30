@@ -1463,7 +1463,7 @@ MonoBehaviour:
   speed: 0.5
   rangeAttack: 0.5
   psAttack: {fileID: 707400594}
-  cdAttack: 3
+  cdAttack: 1.06
   attack: 20
 --- !u!1001 &396836228
 PrefabInstance:
@@ -27710,6 +27710,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bar: {fileID: 1782681968}
+  rectDamage: {fileID: 6759413898255408992, guid: 3d2b0a583a2eaae40a4931e7baeca285,
+    type: 3}
 --- !u!1 &1497034115
 GameObject:
   m_ObjectHideFlags: 0
@@ -27839,6 +27841,8 @@ MonoBehaviour:
   rangeAttack: 1.2
   aud: {fileID: 1497034122}
   soundAttack: {fileID: 8300000, guid: 67ed12ac5585b8b4286f55ccd20367ae, type: 3}
+  hp: 200
+  hpManager: {fileID: 1486709175}
   soundEat: {fileID: 8300000, guid: 43633a18ec1a6d64f995d0108afb8f84, type: 3}
   textCoin: {fileID: 1478907882}
 --- !u!50 &1497034120

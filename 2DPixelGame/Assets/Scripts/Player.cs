@@ -36,6 +36,9 @@ public class Player : MonoBehaviour
     public float hp=200;
 
     private float hpMax;
+    [Header("血量系統")]
+    public HpManager hpManager;
+    
 
     //事件：繪製圖示
     private void OnDrawGizmos()
@@ -82,9 +85,11 @@ public class Player : MonoBehaviour
         if (hit && hit.collider.tag == "道具") hit.collider.GetComponent<Item>().DropProp(); 
 
     }
-    private void Hit()
+    public  void Hit(float damage)
     {
-
+        hp -= damage;                        //扣除傷害值
+        hpManager.UpdateHpBar(hp,hpMax);     //更新血條
+        StartCoroutine(hpManager.ShowDamage());
     }
     private void Dead()
     {

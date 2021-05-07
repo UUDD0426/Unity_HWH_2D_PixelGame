@@ -14,18 +14,29 @@ public class Enemy : MonoBehaviour
     public float cdAttack = 3;
     [Header("攻擊力"), Range(0, 1000)]
     public float attack = 20;
-    
+    [Header("血量")]
+    public float hp = 200;
+    [Header("經驗值"), Range(0, 500)]
+    public float exp = 10;
+
+    private float hpMax;
+    [Header("血量系統")]
+    public HpManager hpManager;
 
     private Transform player;
-
+    private Player _player;
+   
+    
     /// <summary>
     /// 計時器
     /// </summary>
     private float timer;
-
+    private bool isDead = false;
     private void Start()
     {
         player = GameObject.Find("人物").transform;
+        hpMax = hp;
+        _player = player.GetComponent<Player>();
     }
 
     //繪製圖示事件:在Unity內顯示輔助開發
@@ -51,6 +62,7 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private void Track()
     {
+        if (isDead) return;
         //距離 等於 三維向量 的 距離(A點,B點)
         float dis = Vector3.Distance(transform.position, player.position);
 
@@ -67,7 +79,19 @@ public class Enemy : MonoBehaviour
            transform.position= Vector3.MoveTowards(transform.position, player.position,speed*Time.deltaTime);
         }
     }
-
+    public void Hit(float damage)
+    {
+        hp -= damage;                        //扣除傷害值
+        hpManager.UpdateHpBar(hp, hpMax);     //更新血條
+        StartCoroutine(hpManager.ShowDamage(damage));
+        if (hp <= 0) Dead();                 //如果血量<=0就死亡
+    }
+    private void Dead()
+    {
+        hp = 0;
+        isDead = true;
+        Destroy(gameObject, 1.5f);                      //延遲呼叫("方法名稱",延遲時間)
+    }
     private void Attack()
     {
         timer += Time.deltaTime;  //累加時間
@@ -77,7 +101,7 @@ public class Enemy : MonoBehaviour
         {
             timer = 0;        //計時器 歸零 
             psAttack.Play();  //播放 攻擊特效
-            Collider2D hit = Physics2D.OverlapCircle(transform.position, rangeAttack);
+            Collider2D hit = Physics2D.OverlapCircle(transform.position, rangeAttack,1<<9);
             hit.GetComponent<Player>().Hit(attack);
         }
         

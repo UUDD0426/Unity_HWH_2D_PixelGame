@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI; //引用 介面API
+using UnityEngine.SceneManagement; //引用 場景管理API
 
 public class Player : MonoBehaviour
 {
@@ -59,7 +60,7 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
-        
+        if (isDead) return;                  //如果死亡就跳出
         float h = joystick.Horizontal;
         float v = joystick.Vertical;
        
@@ -74,7 +75,7 @@ public class Player : MonoBehaviour
     //要被按鈕呼叫必須設定為公開 public
     public void Attack()
     {
-
+        if (isDead) return;                  //如果死亡就跳出
         //音效來源,撥放一次(音效片段,音量)
         aud.PlayOneShot(soundAttack, 0.5f);
 
@@ -89,11 +90,14 @@ public class Player : MonoBehaviour
     {
         hp -= damage;                        //扣除傷害值
         hpManager.UpdateHpBar(hp,hpMax);     //更新血條
-        StartCoroutine(hpManager.ShowDamage());
+        StartCoroutine(hpManager.ShowDamage(damage));
+        if (hp <= 0) Dead();                 //如果血量<=0就死亡
     }
     private void Dead()
     {
-
+        hp = 0;
+        isDead = true;
+        Invoke("Replsy", 2);                      //延遲呼叫("方法名稱",延遲時間)
     }
 
     //事件-特定時間會執行的方法

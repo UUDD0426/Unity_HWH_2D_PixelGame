@@ -19,10 +19,11 @@ public class HpManager : MonoBehaviour
         //血條.填滿數值=當前血量/血量最大值
         bar.fillAmount = hp / hpMax;
     }
-    public IEnumerator ShowDamage()
+    public IEnumerator ShowDamage(float damage)
     {
         RectTransform rect = Instantiate(rectDamage, transform);       //生成傷害數值在血條系統內
         rect.anchoredPosition = new Vector2(0, 250);                   //指定座標
+        rect.GetComponent<Text>().text = damage.ToString();            //更新數值
         float y = rect.anchoredPosition.y;
         while (y < 400)
         {
@@ -31,6 +32,6 @@ public class HpManager : MonoBehaviour
             yield return  new WaitForSeconds(0.2f);
             
         }
-
+        Destroy(rect.gameObject, 0.5f);                                //刪除傷害數值物件
     }
 }

@@ -4,6 +4,9 @@ using UnityEngine.SceneManagement; //引用 場景管理API
 
 public class Player : MonoBehaviour
 {
+
+
+    #region 欄位
     //修飾詞 類型 名稱(指定值);
 
 
@@ -44,14 +47,10 @@ public class Player : MonoBehaviour
     [Header("等級文字")]
     public Text textLV;
     private bool isDead = false;
+    #endregion
     //事件：繪製圖示
-    private void OnDrawGizmos()
-    {
-        //指定圖示顏色(紅,綠,藍,透明)
-        Gizmos.color = new Color(1, 0, 0, 0.4f);
-        //繪製圖示 球體(中心點,半徑)
-        Gizmos.DrawSphere(transform.position, rangeAttack);
-    }
+    #region 方法
+  
 
     //方法語法 Method-儲存複雜的程式區塊或演算法
     //修飾詞 類型 名稱(){程式區塊或演算法}
@@ -102,7 +101,41 @@ public class Player : MonoBehaviour
         isDead = true;
         Invoke("Replsy", 2);                      //延遲呼叫("方法名稱",延遲時間)
     }
+    private  void Replay()
+    {
+        SceneManager.LoadScene("遊戲場景");
+    }
+    #endregion
+    private float exp;
+    
+    /// <summary>
+    /// 需要多少經驗值才會升等，一等設定為100
+    /// </summary>
+    private float expNeed = 100;
+    [Header("經驗值吧條")]
+    public Image imgExp;
 
+
+
+    /// <summary>
+    /// 經驗值控制
+    /// </summary>
+    /// <param name="getExp">接收到的經驗值</param>
+    public void Exp(float getExp)
+    {
+        exp += getExp;
+        print("經驗值:" + exp);
+        imgExp.fillAmount = exp / expNeed;
+        //升級
+        if(exp >=expNeed)          //如果經驗值>=經驗需求ex120>100
+        {
+            Lv++;                  //升級EX2 
+            textLV.text = "LV" + Lv;//介面更新
+            exp -= expNeed;         //將多餘的經驗值不回來EX120-100=20
+            imgExp.fillAmount = exp / expNeed;//介面更新
+        }
+    }
+    #region 事件
     //事件-特定時間會執行的方法
     //開始事件：撥放後執行一次
     private void Start()
@@ -138,4 +171,12 @@ public class Player : MonoBehaviour
         textCoin.text = "金幣:" + coin;
         }
     }
+    private void OnDrawGizmos()
+    {
+        //指定圖示顏色(紅,綠,藍,透明)
+        Gizmos.color = new Color(1, 0, 0, 0.4f);
+        //繪製圖示 球體(中心點,半徑)
+        Gizmos.DrawSphere(transform.position, rangeAttack);
+    }
+    #endregion 
 }

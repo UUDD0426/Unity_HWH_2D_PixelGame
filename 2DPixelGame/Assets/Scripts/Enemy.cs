@@ -17,7 +17,7 @@ public class Enemy : MonoBehaviour
     [Header("血量")]
     public float hp = 200;
     [Header("經驗值"), Range(0, 500)]
-    public float exp = 10;
+    public float exp = 20;
 
     private float hpMax;
     [Header("血量系統")]
@@ -88,9 +88,13 @@ public class Enemy : MonoBehaviour
     }
     private void Dead()
     {
+        if (isDead) return;   //如果 死亡就跳出
         hp = 0;
         isDead = true;
-        Destroy(gameObject, 1.5f);                      //延遲呼叫("方法名稱",延遲時間)
+        Destroy(gameObject, 1.5f);
+
+        //延遲呼叫("方法名稱",延遲時間)
+        _player.Exp(exp);   //將經驗值傳給玩家
     }
     private void Attack()
     {

@@ -114,6 +114,8 @@ public class Player : MonoBehaviour
     private float expNeed = 100;
     [Header("經驗值吧條")]
     public Image imgExp;
+    [Header("經驗值資料")]
+    public ExpData expData;
 
 
 
@@ -123,24 +125,48 @@ public class Player : MonoBehaviour
     /// <param name="getExp">接收到的經驗值</param>
     public void Exp(float getExp)
     {
+        //取得目前等級需要得經驗值需求
+        //要求得的資料為 等級減一
+        expNeed = expData.exp[Lv - 1];
         exp += getExp;
         print("經驗值:" + exp);
         imgExp.fillAmount = exp / expNeed;
         //升級
-        if(exp >=expNeed)          //如果經驗值>=經驗需求ex120>100
+        //迴圈 while
+        //語法:
+        // while(布林值){布林值為true時持續執行}
+        //if(布林值){布林值為true時續執行一次}
+        while (exp >=expNeed)          //如果經驗值>=經驗需求ex120>100
         {
             Lv++;                  //升級EX2 
             textLV.text = "LV" + Lv;//介面更新
             exp -= expNeed;         //將多餘的經驗值不回來EX120-100=20
             imgExp.fillAmount = exp / expNeed;//介面更新
+            expNeed = expData.exp[Lv - 1];
         }
+    }
+    private void LevelUP()
+    {
+        //攻擊力每一等提升10，從20開始
+        attack = 20+(Lv - 1) * 10;
+        //血量每一等提升50，從200開始
+        hpMax = 200 + (Lv - 1) * 50;
+        hp = hpMax;               //恢復血量全滿
+        hpManager.UpdateHpBar(hp, hpMax);//更新血條
     }
     #region 事件
     //事件-特定時間會執行的方法
     //開始事件：撥放後執行一次
     private void Start()
     {
-        hpMax = hp;
+        hpMax = hp;   //取得血量最大值
+        //利用公式寫入經驗值資料，一等100，兩等200....
+        for(int i = 0; i < 99; i++)
+        {
+            //經驗值資料的經驗值陣列[續號]=公式
+            //公式:(續號+1)*100-每等增加100
+            expData.exp[i] = (i + 1) * 100;
+        }
        
     }
     //更新事件：大約一秒執行六十次 60FPS

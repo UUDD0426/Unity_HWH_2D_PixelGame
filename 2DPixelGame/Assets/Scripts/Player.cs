@@ -86,7 +86,8 @@ public class Player : MonoBehaviour
 
         //如果 碰到物件存在 並且 碰到的物件 標籤 為道具 就取得道具腳本並呼叫掉落道具方法
         if (hit && hit.collider.tag == "道具") hit.collider.GetComponent<Item>().DropProp();
-        if (hit && hit.collider.tag == "敵人") hit.collider.GetComponent<Enemy>().Hit(attack);
+        if (hit && hit.collider.tag == "敵人") hit.collider.GetComponent<Enemy>().Hit(attack+attackWeapon);
+        if (hit && hit.collider.tag == "NPC") hit.collider.GetComponent<NPC>().OpenShop();
     }
     public  void Hit(float damage)
     {
@@ -159,6 +160,7 @@ public class Player : MonoBehaviour
     //開始事件：撥放後執行一次
     private void Start()
     {
+        textCoin.text = "金幣:" + coin;
         hpMax = hp;   //取得血量最大值
         //利用公式寫入經驗值資料，一等100，兩等200....
         for(int i = 0; i < 99; i++)
@@ -183,7 +185,8 @@ public class Player : MonoBehaviour
     public Text textCoin;
 
 
-    private int coin;
+    public  int coin;
+    public float attackWeapon;
 
 
     //觸發事件-進入:兩個物件必須有一個勾選 Is Trigger
